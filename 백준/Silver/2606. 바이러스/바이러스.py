@@ -1,42 +1,38 @@
-#!/usr/bin/env python3
-
 import sys
-from collections import deque
+
+def dfs(v, graph, visited, sum):
+    visited[v - 1] = True
+    virus = set()
+    
+    for c in graph[v]:
+        if visited[c - 1] == False:
+            sum.add(c)
+            dfs(c, graph, visited, sum)
+
 
 n = int(sys.stdin.readline().rstrip())
-
 m = int(sys.stdin.readline().rstrip())
 
-graph = {}
+coms = {}
 
-for i in range(m):
-    start, end = map(int, sys.stdin.readline().rstrip().split(' '))
-
-    if start in graph:
-        graph[start].append(end)
-    else:
-        graph[start] = [end]
-
-    if end in graph:
-        graph[end].append(start)
-    else:
-        graph[end] = [start]
-
-if 1 in graph:
-    stack = deque([1])
-    result = [1]
+for idx in range(m):
+    a, b = map(int, sys.stdin.readline().rstrip().split(' '))
     
-    while len(stack) != 0:
-        u = stack.pop()
-
-        for num in graph[u]:
-            if num not in result:
-                result.append(num)
-                stack.append(num)
+    if a in coms:
+        coms[a].append(b)
+    else:
+        coms[a] = [b]
         
-    #print(u)
-
-    print(len(result) - 1)
-else:
+    if b in coms:
+        coms[b].append(a)
+    else:
+        coms[b] = [a]
+        
+if 1 not in coms:
     print(0)
+else:
+    visited = [False for _ in range(n)]
+    sum = set()
+    dfs(1, coms, visited, sum)
     
+    print(len(sum))
