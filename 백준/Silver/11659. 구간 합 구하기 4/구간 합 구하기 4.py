@@ -1,18 +1,14 @@
-#!/usr/bin/env python3
-
 import sys
 
 n, m = map(int, sys.stdin.readline().rstrip().split(' '))
 
 nums = list(map(int, sys.stdin.readline().rstrip().split(' ')))
 
-sum_list, sum = [0], 0
+sum = [0 for _ in range(n + 1)]
+sum[1] = nums[0]
+for i in range(2, n + 1):
+    sum[i] = nums[i - 1] + sum[i - 1]
 
-for num in nums:
-    sum += num
-    sum_list.append(sum)
-    
 for _ in range(m):
-    start, end = map(int, sys.stdin.readline().rstrip().split(' '))
-    print(sum_list[end] - sum_list[start - 1])
-    
+    i, j = map(int, sys.stdin.readline().rstrip().split(' '))
+    print(sum[j] - sum[i - 1])
