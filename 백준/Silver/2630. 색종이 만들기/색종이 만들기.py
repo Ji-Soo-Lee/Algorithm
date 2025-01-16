@@ -1,56 +1,34 @@
-#!/usr/bin/env python3
-
 import sys
 
-def same(paper, n):
-    color = paper[0][0]
-    for i in range(n):
-        for square in paper[i]:
-            if color != square:
-                return False
-    return True
-
-def cut(paper, n, white, blue):
-
-    if same(paper, n):
-        if paper[0][0] == 1:
-            blue += 1
-        elif paper[0][0] == 0:
-            white += 1
-        return white, blue
+def div(paper, white, blue):
+    color = set(sum(paper, []))
     
+    if len(color) == 2:
+        cuts = [[] for _ in range(4)]
+        n = len(paper)//2
+        for idx in range(n):
+            cuts[0].append(paper[idx][:n])
+            cuts[1].append(paper[idx][n:])
+            cuts[2].append(paper[n + idx][:n])
+            cuts[3].append(paper[n + idx][n:])
+
+        for cut in cuts:
+            white, blue = div(cut, white, blue)
     else:
-        length = n//2
+        if color == {1}:
+            blue += 1
+        else:
+            white += 1
         
-        i = list()
-        ii = list()
-        iii = list()
-        iv = list()
-        for j in range(n//2):
-            i.append(paper[j][:n//2])
-            ii.append(paper[j][n//2:])
-            iii.append(paper[j+n//2][:n//2])
-            iv.append(paper[j+n//2][n//2:])
-        
-        white_i, blue_i = cut(i, length, white, blue)
-        white_ii, blue_ii = cut(ii, length, white_i, blue_i)
-        white_iii, blue_iii = cut(iii, length, white_ii, blue_ii)
-        white_iv, blue_iv = cut(iv, length, white_iii, blue_iii)
-
-        return white_iv, blue_iv
-
-
+    return white, blue
     
 n = int(sys.stdin.readline().rstrip())
-paper = [0 for i in range(n)]
+paper = []
 
-for i in range(n):
-    paper[i] = list(map(int, sys.stdin.readline().rstrip().split(' ')))
+for _ in range(n):
+    paper.append(list(map(int, sys.stdin.readline().rstrip().split(' '))))
 
-white = 0
-blue = 0
-
-white, blue = cut(paper, n, white, blue)
+white, blue = div(paper, 0, 0)
 
 print(white)
 print(blue)
