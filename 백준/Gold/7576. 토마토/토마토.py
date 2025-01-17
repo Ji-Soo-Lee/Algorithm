@@ -119,7 +119,7 @@ while len(queue) != 0:
     for i in range(limit):
         cnt = search(box, queue, cnt)
     
-    day += 1   
+    day += 1
 
 if cnt < n*m - no_tomato:
     day = -1
