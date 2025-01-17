@@ -1,29 +1,19 @@
-#!/usr/bin/env python3
-
 import sys
 
-def append(arr, index, n, m):
-
-    for num in range(index+1, n+2):
-        if len(arr) == m:
-            print(*arr)
-            arr.pop()
-            break
-        
-        elif num > n:
-            arr.pop()
-        
-        elif len(arr) != m:
-            arr.append(num)
+def backtracking(curr, n, m, result):
+    if len(result) == m:
+        print(*result)
+        return
+    else:
+        for num in range(curr + 1, n + 1):
+            # print(num, curr, result)
+            if num > result[-1]:
+                result.append(num)
+                backtracking(curr + 1, n, m, result)
+                result.pop()
             
-            append(arr, num, n, m)
-                        
-
+        
 n, m = map(int, sys.stdin.readline().rstrip().split(' '))
 
-for index in range(1, n - m + 2):
-    
-    arr = [index]
-
-    append(arr, index, n, m)
-        
+for i in range(1, n - m + 2):
+    backtracking(i, n, m, [i])
