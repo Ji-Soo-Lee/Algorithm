@@ -1,40 +1,29 @@
 import sys
 
-def backtracking(result, n, m, idxAns):
+def backtracking(result, n, m, comp, idx):
     if len(result) == m:
-        idxAns.add(' '.join(str(s) for s in result))
+        print(*result)
         return
     
+    prevNum = -1
     for num in range(n):
-        if num not in result:
-            result.append(num)
-            backtracking(result, n, m, idxAns)
-            result.pop()
+        if num not in idx:
+            if prevNum != comp[num]:
+                result.append(comp[num])
+                idx.append(num)
+                backtracking(result, n, m, comp, idx)
+                result.pop()
+                idx.pop()
+                prevNum = comp[num]
                     
 n, m = map(int, sys.stdin.readline().rstrip().split(' '))
 comp = list(map(int, sys.stdin.readline().rstrip().split(' ')))
 
 comp.sort()
 
-idxAns = set()
-
+prevNum = -1
 for i in range(n):
-    backtracking([i], n, m, idxAns)
+    if comp[i] != prevNum:
+        backtracking([comp[i]], n, m, comp, [i])
+        prevNum = comp[i]
     
-idxAns = sorted(list(idxAns))
-# print(idxAns)
-results = set()
-
-for idxs in idxAns:
-    idxs = map(int, idxs.split(' '))
-    result = []
-    for idx in idxs:
-        result.append(str(comp[idx]))
-    results.add(' '.join(result))
-
-results = list(results)
-for idx in range(len(results)):
-    results[idx] = list(map(int, results[idx].split(' ')))
-    
-for result in sorted((results)):
-    print(*result)
